@@ -30,21 +30,27 @@ class UserService {
 
     create(body) {
         return new Promise(async (resolve, reject) => {
-            if (!body.email || !body.name || !body.password)
-                reject(new BadRequestError('Name, email, password is required'));
+            if (!body.password || !body.email)
+                return reject(new BadRequestError('\'password\', \'email\' fields are required'));
 
             if (await UserModel.findOne({ email: body.email }))
                 return reject(new BadRequestError('User is already created'));
 
+            if (!UserModel.isValidEmail(body.email))
+                return reject(new BadRequestError('Email is not correct'));
+
+            if (!UserModel.isValidPassword(body.password))
+                return reject(new BadRequestError('Password is not correct'));
+
+            const hash = await hasher.hash(body.password);
+
+            const user = {
+                name: body.name,
+                email: body.email,
+                password: hash
+            }
+
             try {
-                const hash = await hasher.hash(body.password);
-
-                const user = {
-                    name: body.name,
-                    email: body.email,
-                    password: hash
-                }
-
                 const createdUser = await new UserModel(user).save();
 
                 resolve({
@@ -53,7 +59,7 @@ class UserService {
                     email: createdUser.email
                 });
 
-            } catch (err) {
+            } catch(err) {
                 reject(new ServerError());
                 logger.log(err);
             }

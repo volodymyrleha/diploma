@@ -1,4 +1,6 @@
 const { Schema, model } = require('mongoose');
+const emailValidator = require('../utils/EmailValidator');
+const passwordValidator = require('../utils/PasswordValidator');
 
 const schema = new Schema({
     name: {
@@ -16,5 +18,8 @@ const schema = new Schema({
         required: true
     }
 });
+
+schema.statics.isValidEmail = emailValidator;
+schema.statics.isValidPassword = passwordValidator;
 
 module.exports = model('User', schema);
