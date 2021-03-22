@@ -2,8 +2,10 @@ const UserModel = require('../models/user');
 const ObjectId = require('mongoose').Types.ObjectId;
 const { BadRequestError, NotFoundError, ServerError } = require('../utils/ErrorHandler');
 const Logger = require('../utils/Logger');
+const PasswordHasher = require('../utils/PasswordHasher');
 
 const logger = new Logger('userservice');
+const hasher = new PasswordHasher();
 
 class UserService {
     getById(id) {
@@ -28,16 +30,28 @@ class UserService {
 
     create(body) {
         return new Promise(async (resolve, reject) => {
-            if (!body.email || !body.name)
-                reject(new BadRequestError('Name and email is required'));
+            if (!body.email || !body.name || !body.password)
+                reject(new BadRequestError('Name, email, password is required'));
 
-            const user = {
-                name: body.name,
-                email: body.email
-            }
+            if (await UserModel.findOne({ email: body.email }))
+                return reject(new BadRequestError('User is already created'));
 
             try {
-                resolve(await new UserModel(user).save());
+                const hash = await hasher.hash(body.password);
+
+                const user = {
+                    name: body.name,
+                    email: body.email,
+                    password: hash
+                }
+
+                const createdUser = await new UserModel(user).save();
+
+                resolve({
+                    _id: createdUser._id,
+                    name: createdUser.name,
+                    email: createdUser.email
+                });
 
             } catch (err) {
                 reject(new ServerError());

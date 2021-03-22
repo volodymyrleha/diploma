@@ -10,6 +10,10 @@ const schema = new Schema({
         unique: true,
         required: true,
         lowercase: true
+    },
+    password: {
+        type: String,
+        required: true
     }
 });
 
