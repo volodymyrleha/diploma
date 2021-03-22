@@ -1,4 +1,5 @@
 const express = require('express');
+const users = require('./users');
 
 const router = express.Router();
 
@@ -7,5 +8,7 @@ router.get('/status', (req, res) => {
         message: "ok"
     });
 });
+
+router.use('/users', users);
 
 module.exports = router;
