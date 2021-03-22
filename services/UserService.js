@@ -1,6 +1,9 @@
 const UserModel = require('../models/user');
 const ObjectId = require('mongoose').Types.ObjectId;
 const { BadRequestError, NotFoundError, ServerError } = require('../utils/ErrorHandler');
+const Logger = require('../utils/Logger');
+
+const logger = new Logger('userservice');
 
 class UserService {
     getById(id) {
@@ -18,6 +21,7 @@ class UserService {
 
             } catch (err) {
                 reject(new ServerError());
+                logger.log(err);
             }
         });
     }
@@ -37,6 +41,7 @@ class UserService {
 
             } catch (err) {
                 reject(new ServerError());
+                logger.log(err);
             }
         });
     }

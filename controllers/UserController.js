@@ -8,7 +8,6 @@ class UserController {
 
         const user = await userService.getById(id).catch(err => { 
             next(err);
-            //console.log(`[UserConroller] ${ err }`);
         });
 
         if (user)
@@ -18,7 +17,6 @@ class UserController {
     async create(req, res, next) {
         const user = await userService.create(req.body).catch(err => {
             next(err);
-            //console.log(`[UserConroller] ${ err }`);
         });            
 
         if (user)

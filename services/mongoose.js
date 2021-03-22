@@ -1,12 +1,15 @@
 const mongoose = require('mongoose');
 const { MONGODB_URI } = require('../config');
+const Logger = require('../utils/Logger');
+
+const logger = new Logger('mongoose');
 
 mongoose.connection.on('connected', () => {
-    console.log('[MONGOOSE] Database is connected');
+    logger.log('Database is connected');
 })
 
 mongoose.connection.on('error', (err) => {
-    console.log(`[MONGOOSE] Connection error: ${ err }`);
+    logger.log(`Connection error: ${ err }`);
     process.exit(1);
 });
 
