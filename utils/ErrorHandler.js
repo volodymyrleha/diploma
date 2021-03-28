@@ -11,6 +11,18 @@ class BadRequestError extends Error {
     }
 }
 
+class UnauthorizedError extends Error {
+    constructor(message) {
+        super(401, message);
+    }
+}
+
+class ForbiddenError extends Error {
+    constructor(message) {
+        super(403, message);
+    } 
+}
+
 class NotFoundError extends Error {
     constructor(message) {
         super(404, message);
@@ -26,5 +38,7 @@ class ServerError extends Error {
 module.exports = {
     BadRequestError,
     NotFoundError,
+    UnauthorizedError,
+    ForbiddenError,
     ServerError
 }

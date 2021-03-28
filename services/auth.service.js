@@ -1,34 +1,43 @@
+const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
-const ObjectId = require('mongoose').Types.ObjectId;
+const { JWT_SECRET } = require('../config');
 const { BadRequestError, NotFoundError, ServerError } = require('../utils/ErrorHandler');
 const Logger = require('../utils/Logger');
 const PasswordHasher = require('../utils/PasswordHasher');
 
-const logger = new Logger('userservice');
+const logger = new Logger('authservice');
 const hasher = new PasswordHasher();
 
-class UserService {
-    getById(id) {
+class AuthService {
+    login(body) {
         return new Promise(async (resolve, reject) => {
-            if (!ObjectId.isValid(id))
-                reject(new BadRequestError('Id is not correct'));
+            if (!body.password || !body.email)
+                return reject(new BadRequestError('\'password\', \'email\' fields are required'));
+
+            const user = await UserModel.findOne({ email: body.email });
+
+            if (!user)
+                return reject(new NotFoundError('User not found'));
 
             try {
-                const user = await UserModel.findById(id);
-
-                if (!user)
-                    reject(new NotFoundError('User not found'));
-
-                resolve(user);
-
+                await hasher.compare(body.password, user.password);
             } catch (err) {
-                reject(new ServerError());
-                logger.log(err);
+                return reject(new BadRequestError('Password is not correct'));
             }
+
+            const token = this.createToken(user._id);
+
+            resolve({
+                user: {
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email,
+                }, token
+            });
         });
     }
 
-    create(body) {
+    register(body) {
         return new Promise(async (resolve, reject) => {
             if (!body.password || !body.email)
                 return reject(new BadRequestError('\'password\', \'email\' fields are required'));
@@ -53,10 +62,14 @@ class UserService {
             try {
                 const createdUser = await new UserModel(user).save();
 
+                const token = this.createToken(createdUser._id);
+
                 resolve({
-                    _id: createdUser._id,
-                    name: createdUser.name,
-                    email: createdUser.email
+                    user: {
+                        _id: createdUser._id,
+                        name: createdUser.name,
+                        email: createdUser.email
+                    }, token
                 });
 
             } catch(err) {
@@ -65,6 +78,12 @@ class UserService {
             }
         });
     }
+
+    createToken(id) {
+        return jwt.sign({ _id: id }, JWT_SECRET, {
+            expiresIn: 86400
+        });
+    }
 }
 
-module.exports = UserService;
+module.exports = AuthService;

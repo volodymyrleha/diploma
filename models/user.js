@@ -5,7 +5,8 @@ const passwordValidator = require('../utils/PasswordValidator');
 const schema = new Schema({
     name: {
         type: String,
-        maxLength: 50
+        maxLength: 50,
+        default: null
     },
     email: {
         type: String,

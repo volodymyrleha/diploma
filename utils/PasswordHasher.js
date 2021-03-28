@@ -9,6 +9,20 @@ class PasswordHasher {
             resolve(hash);
         });
     }
+
+    compare(password, hash) {
+        return new Promise((resolve, reject) => {
+            bcrypt.compare(password, hash, (err, results) => {
+                if (err)
+                    reject(err);
+
+                if (results)
+                    resolve(true);
+                else
+                    resolve(false);
+            });
+        });
+    }
 }
 
 module.exports = PasswordHasher;
