@@ -1,10 +1,10 @@
 class Logger {
     constructor(service) {
-        this.service = service;
+        this.service = service.toUpperCase();
     }
 
     log(message) {
-        console.log(`[${ this.service.toUpperCase() }] ${ message }`);
+        console.log(`[${ this.service }] ${ message }`);
     }
 }
 

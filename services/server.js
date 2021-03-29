@@ -1,7 +1,7 @@
 const http = require('http');
 const app = require('./express');
 const { PORT } = require('../config');
-const Logger = require('../utils/Logger');
+const Logger = require('../utils/logger');
 
 const logger = new Logger('server');
 

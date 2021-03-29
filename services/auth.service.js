@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
 const { JWT_SECRET } = require('../config');
-const { BadRequestError, NotFoundError, ServerError } = require('../utils/ErrorHandler');
+const { BadRequestError, NotFoundError, ServerError } = require('../utils/error-handler');
 const Logger = require('../utils/Logger');
-const PasswordHasher = require('../utils/PasswordHasher');
+const PasswordHasher = require('../utils/password-hasher');
 
 const logger = new Logger('authservice');
 const hasher = new PasswordHasher();

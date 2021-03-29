@@ -1,7 +1,7 @@
 const UserModel = require('../models/user');
 const ObjectId = require('mongoose').Types.ObjectId;
-const { BadRequestError, NotFoundError, ServerError } = require('../utils/ErrorHandler');
-const Logger = require('../utils/Logger');
+const { BadRequestError, NotFoundError, ServerError } = require('../utils/error-handler');
+const Logger = require('../utils/logger');
 
 const logger = new Logger('userservice');
 

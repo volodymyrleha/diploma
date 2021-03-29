@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
-const emailValidator = require('../utils/EmailValidator');
-const passwordValidator = require('../utils/PasswordValidator');
+const emailValidator = require('../utils/email-validator');
+const passwordValidator = require('../utils/password-validator');
 
 const schema = new Schema({
     name: {
