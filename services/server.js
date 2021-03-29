@@ -1,13 +1,16 @@
 const http = require('http');
 const app = require('./express');
 const { PORT } = require('../config');
+const Logger = require('../utils/logger');
+
+const logger = new Logger('server');
 
 const server = http.createServer(app);
 
 module.exports = {
     run: () => {
         server.listen(PORT, () => {
-            console.log(`[SERVER] Running on PORT: ${PORT}`);
+            logger.log(`Running on PORT: ${ PORT }`);
         });
     }
 };
