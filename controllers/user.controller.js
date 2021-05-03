@@ -126,6 +126,69 @@ class UserController {
             next(err);
         }
     }
+
+    async getTasks(req, res, next) {
+        const id = req.userId;
+
+        try {
+            const tasks = await userService.getTasks(id);
+            return res.status(200).json(tasks);
+
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async createTask(req, res, next) {
+        const id = req.userId;
+
+        try {
+            const task = await userService.createTask(id, req.body);
+            return res.status(200).json(task);
+
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async updateTask(req, res, next) {
+        const userId = req.userId;
+        const taskId = req.params.id;
+
+        try {
+            const task = await userService.updateTask(userId, taskId, req.body);
+            return res.status(200).json(task);
+
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async updateTaskState(req, res, next) {
+        const userId = req.userId;
+        const taskId = req.params.id;
+
+        try {
+            const task = await userService.updateTaskState(userId, taskId, req.body);
+            return res.status(200).json(task);
+
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async deleteTask(req, res, next) {
+        const userId = req.userId;
+        const taskId = req.params.id;
+
+        try {
+            const tasks = await userService.deleteTask(userId, taskId);
+            return res.status(200).json(tasks);
+
+        } catch (err) {
+            next(err);
+        }
+    }
 }
 
 module.exports = UserController;

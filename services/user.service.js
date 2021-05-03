@@ -1,6 +1,7 @@
 const UserModel = require('../models/user');
 const { NoteModel } = require('../models/note');
 const { EventModel } = require('../models/event');
+const { TaskModel } = require('../models/task');
 const ObjectId = require('mongoose').Types.ObjectId;
 const { BadRequestError, NotFoundError, ServerError } = require('../utils/error-handler');
 const PasswordHasher = require('../utils/password-hasher');
@@ -275,6 +276,177 @@ class UserService {
                 user.save();
 
                 resolve(user.events);
+
+            } catch (err) {
+                reject(new ServerError());
+                logger.log(err);
+            }
+        });
+    }
+
+    getTasks(id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const user = await UserModel.findById(id);
+
+                if (!user)
+                    return reject(new NotFoundError('User not found'));
+
+                resolve(user.tasks);
+
+            } catch (err) {
+                reject(new ServerError());
+                logger.log(err);
+            }
+        });
+    }
+
+    createTask(id, body) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const user = await UserModel.findById(id);
+
+                if (!user)
+                    return reject(new NotFoundError('User not found'));
+
+                if (!body.title)
+                    return reject(new BadRequestError(`'title' field is required`));
+
+                let deadline = null;
+
+                if (body.deadline) {
+                    deadline = new Date(body.deadline);
+
+                    if (!(deadline instanceof Date && !isNaN(deadline)))
+                        return reject(new BadRequestError('deadline is not correct'));
+                }
+
+                const task = await new TaskModel({
+                    title: body.title,
+                    description: body.description ? body.description : ''
+                });
+
+                if (deadline)   
+                    task.deadline = deadline;
+
+                user.tasks.push(task);
+
+                user.save();
+                resolve(task);
+
+            } catch (err) {
+                reject(new ServerError());
+                logger.log(err);
+            }
+        });
+    }
+
+    updateTask(userId, taskId, body) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const user = await UserModel.findById(userId);
+
+                if (!user)
+                    return reject(new NotFoundError('User not found'));
+
+                const task = user.tasks.filter(task => task._id.toString() === taskId)[0];
+
+                if (!task)
+                    return reject(new NotFoundError('Task not found'));
+
+                if (!body.title)
+                    return reject(new BadRequestError(`'title' field is required`));
+
+                let deadline = null;
+
+                if (body.deadline) {
+                    deadline = new Date(body.deadline);
+
+                    if (!(deadline instanceof Date && !isNaN(deadline)))
+                        return reject(new BadRequestError('deadline is not correct'));
+                }
+
+                let state = null;
+
+                if (body.state) {
+                    state = body.state;
+
+                    if (state < 0 || state > 2)
+                        return reject(new BadRequestError('state is not correct'));
+                }
+
+                task.title = body.title;
+                task.description = body.description ? body.description : '';
+                
+                if (deadline)
+                    task.deadline = deadline;
+
+                if (state)
+                    task.state = state;
+
+                user.save();
+
+                resolve(task);
+
+            } catch (err) {
+                reject(new ServerError());
+                logger.log(err);
+            }
+        });
+    }
+
+    updateTaskState(userId, taskId, body) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const user = await UserModel.findById(userId);
+
+                if (!user)
+                    return reject(new NotFoundError('User not found'));
+
+                const task = user.tasks.filter(task => task._id.toString() === taskId)[0];
+
+                if (!task)
+                    return reject(new NotFoundError('Task not found'));
+
+                if (!body.state)
+                    return reject(new BadRequestError(`'state' field is required`));
+
+                const state = body.state;                
+
+                if (state < 0 || state > 2)
+                    return reject(new BadRequestError('state is not correct'));
+
+                task.state = state;
+
+                user.save();
+
+                resolve(task);
+
+            } catch (err) {
+                reject(new ServerError());
+                logger.log(err);
+            }
+        });
+    }
+
+    deleteTask(userId, taskId) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const user = await UserModel.findById(userId);
+
+                if (!user)
+                    return reject(new NotFoundError('User not found'));
+
+                const task = user.tasks.filter(task => task._id.toString() === taskId)[0];
+
+                if (!task)
+                    return reject(new NotFoundError('Event not found'));
+
+                user.tasks = user.tasks.filter(task => task._id.toString() !== taskId);
+
+                user.save();
+
+                resolve(user.tasks);
 
             } catch (err) {
                 reject(new ServerError());
