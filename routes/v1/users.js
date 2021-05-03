@@ -6,5 +6,6 @@ const router = express.Router();
 const controller = new UserController();
 
 router.get('/self', auth, controller.getById);
+router.patch('/self/password', auth, controller.updatePassword);
 
 module.exports = router;
