@@ -18,4 +18,10 @@ router.post('/self/events', auth, controller.createEvent);
 router.put('/self/events/:id', auth, controller.updateEvent);
 router.delete('/self/events/:id', auth, controller.deleteEvent);
 
+router.get('/self/tasks', auth, controller.getTasks);
+router.post('/self/tasks', auth, controller.createTask);
+router.put('/self/tasks/:id', auth, controller.updateTask);
+router.patch('/self/tasks/:id/state', auth, controller.updateTaskState);
+router.delete('/self/tasks/:id', auth, controller.deleteTask);
+
 module.exports = router;

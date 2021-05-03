@@ -33,7 +33,8 @@ class AuthService {
                     name: user.name,
                     email: user.email,
                     notes: user.notes,
-                    events: user.events
+                    events: user.events,
+                    tasks: user.tasks
                 }, token
             });
         });
@@ -59,7 +60,9 @@ class AuthService {
                 name: body.name,
                 email: body.email,
                 password: hash,
-                notes: []
+                notes: [],
+                evetns: [],
+                tasks: []
             }
 
             try {
@@ -73,7 +76,8 @@ class AuthService {
                         name: createdUser.name,
                         email: createdUser.email,
                         notes: createdUser.notes,
-                        events: createdUser.events
+                        events: createdUser.events,
+                        tasks: createdUser.tasks
                     }, token
                 });
 
