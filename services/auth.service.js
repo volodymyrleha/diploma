@@ -32,6 +32,7 @@ class AuthService {
                     _id: user._id,
                     name: user.name,
                     email: user.email,
+                    notes: user.notes
                 }, token
             });
         });
@@ -56,7 +57,8 @@ class AuthService {
             const user = {
                 name: body.name,
                 email: body.email,
-                password: hash
+                password: hash,
+                notes: []
             }
 
             try {
@@ -68,7 +70,8 @@ class AuthService {
                     user: {
                         _id: createdUser._id,
                         name: createdUser.name,
-                        email: createdUser.email
+                        email: createdUser.email,
+                        notes: createdUser.notes
                     }, token
                 });
 
