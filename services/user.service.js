@@ -1,5 +1,6 @@
 const UserModel = require('../models/user');
 const { NoteModel } = require('../models/note');
+const { EventModel } = require('../models/event');
 const ObjectId = require('mongoose').Types.ObjectId;
 const { BadRequestError, NotFoundError, ServerError } = require('../utils/error-handler');
 const PasswordHasher = require('../utils/password-hasher');
@@ -7,6 +8,8 @@ const Logger = require('../utils/logger');
 
 const logger = new Logger('userservice');
 const hasher = new PasswordHasher();
+
+const ALL_DAY = 1440;
 
 class UserService {
     getById(id) {
@@ -156,6 +159,122 @@ class UserService {
                 user.save();
 
                 resolve(user.notes);
+
+            } catch (err) {
+                reject(new ServerError());
+                logger.log(err);
+            }
+        });
+    }
+
+    getEvents(id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const user = await UserModel.findById(id);
+
+                if (!user)
+                    return reject(new NotFoundError('User not found'));
+
+                resolve(user.events);
+
+            } catch (err) {
+                reject(new ServerError());
+                logger.log(err);
+            }
+        });
+    }
+
+    createEvent(id, body) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const user = await UserModel.findById(id);
+
+                if (!user)
+                    return reject(new NotFoundError('User not found'));
+
+                if (!body.title || !body.date)
+                    return reject(new BadRequestError(`'title' and 'date' fields is required`));
+
+                
+                const date = new Date(body.date);
+
+                if (!(date instanceof Date && !isNaN(date)))
+                    return reject(new BadRequestError('date is not correct'));
+
+                const event = await new EventModel({
+                    title: body.title,
+                    description: body.description ? body.description : '',
+                    date: new Date(body.date),
+                    duration: body.duration ? body.duration : ALL_DAY
+                });
+
+                user.events.push(event);
+
+                user.save();
+                resolve(event);
+
+            } catch (err) {
+                reject(new ServerError());
+                logger.log(err);
+            }
+        });
+    }
+
+    updateEvent(userId, eventId, body) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const user = await UserModel.findById(userId);
+
+                if (!user)
+                    return reject(new NotFoundError('User not found'));
+
+                const event = user.events.filter(event => event._id.toString() === eventId)[0];
+
+                if (!event)
+                    return reject(new NotFoundError('Event not found'));
+
+                if (!body.title || !body.date)
+                    return reject(new BadRequestError(`'title' and 'date' fields are required`));
+
+                const date = new Date(body.date);
+
+                if (!(date instanceof Date && !isNaN(date)))
+                    return reject(new BadRequestError('date is not correct'));
+
+                event.title = body.title;
+                event.description = body.description ? body.description : '';
+                event.date = date;
+                event.duration = body.duration ? body.duration : ALL_DAY;
+
+                user.save();
+
+                resolve(event);
+
+            } catch (err) {
+                reject(new ServerError());
+                logger.log(err);
+            }
+        });
+    }
+
+    deleteEvent(userId, eventId) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const user = await UserModel.findById(userId);
+
+                if (!user)
+                    return reject(new NotFoundError('User not found'));
+
+                const event = user.events.filter(event => event._id.toString() === eventId)[0];
+
+                if (!event)
+                    return reject(new NotFoundError('Event not found'));
+
+                user.events = user.events.filter(event => event._id.toString() !== eventId);
+
+                user.save();
+
+                resolve(user.events);
 
             } catch (err) {
                 reject(new ServerError());

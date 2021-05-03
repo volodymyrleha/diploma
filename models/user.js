@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 const { NoteSchema } = require('./note');
+const { EventSchema } = require('./event');
 const emailValidator = require('../utils/email-validator');
 const passwordValidator = require('../utils/password-validator');
 
@@ -19,7 +20,8 @@ const schema = new Schema({
         type: String,
         required: true
     },
-    notes: [ NoteSchema ]
+    notes: [ NoteSchema ],
+    events: [ EventSchema ]
 });
 
 schema.statics.isValidEmail = emailValidator;
