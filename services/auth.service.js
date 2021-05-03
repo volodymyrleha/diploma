@@ -32,7 +32,8 @@ class AuthService {
                     _id: user._id,
                     name: user.name,
                     email: user.email,
-                    notes: user.notes
+                    notes: user.notes,
+                    events: user.events
                 }, token
             });
         });
@@ -71,7 +72,8 @@ class AuthService {
                         _id: createdUser._id,
                         name: createdUser.name,
                         email: createdUser.email,
-                        notes: createdUser.notes
+                        notes: createdUser.notes,
+                        events: createdUser.events
                     }, token
                 });
 

@@ -76,6 +76,56 @@ class UserController {
             next(err);
         }
     }
+
+    async getEvents(req, res, next) {
+        const id = req.userId;
+
+        try {
+            const events = await userService.getEvents(id);
+            return res.status(200).json(events);
+
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async createEvent(req, res, next) {
+        const id = req.userId;
+
+        try {
+            const event = await userService.createEvent(id, req.body);
+            return res.status(200).json(event);
+
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async updateEvent(req, res, next) {
+        const userId = req.userId;
+        const eventId = req.params.id;
+
+        try {
+            const event = await userService.updateEvent(userId, eventId, req.body);
+            return res.status(200).json(event);
+
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async deleteEvent(req, res, next) {
+        const userId = req.userId;
+        const eventId = req.params.id;
+
+        try {
+            const events = await userService.deleteEvent(userId, eventId);
+            return res.status(200).json(events);
+
+        } catch (err) {
+            next(err);
+        }
+    }
 }
 
 module.exports = UserController;
