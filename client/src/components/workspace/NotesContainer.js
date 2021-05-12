@@ -1,43 +1,25 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import Note from './Note';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
 export default function NotesContainer() {
     const classes = useStyles();
+    const notes = useSelector(state => state.user.data.notes);
 
     return (
         <Grid className={classes.container} container>
-            <Grid className={classes.item} item>
-                <Note title='First Note' description='My first note that I added here' />
-            </Grid>
-            <Grid className={classes.item} item>
-                <Note title='First Note' description='My first note that I added here' />
-            </Grid>
-            <Grid className={classes.item} item>
-                <Note title='First Note' description='My first note that I added here' />
-            </Grid>
-            <Grid className={classes.item} item>
-                <Note title='First Note' description='My first note that I added here' />
-            </Grid>
-            <Grid className={classes.item} item>
-                <Note title='First Note' description='My first note that I added here' />
-            </Grid>
-            <Grid className={classes.item} item>
-                <Note title='First Note' description='My first note that I added here' />
-            </Grid>
-            <Grid className={classes.item} item>
-                <Note title='First Note' description='My first note that I added here' />
-            </Grid>
-            <Grid className={classes.item} item>
-                <Note title='First Note' description='My first note that I added here' />
-            </Grid>
-            <Grid className={classes.item} item>
-                <Note title='First Note' description='My first note that I added here' />
-            </Grid>
-            <Grid className={classes.item} item>
-                <Note title='First Note' description='My first note that I added here' />
-            </Grid>
+            {
+                notes.map(note => 
+                    <Grid key={note._id} className={classes.item} item>
+                        <Note 
+                            title={note.title} 
+                            description={note.description}
+                        />
+                    </Grid>
+                )
+            }
         </Grid>
     );
 }
