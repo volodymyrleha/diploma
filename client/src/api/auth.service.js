@@ -1,7 +1,5 @@
 import apicall from './apicall';
-
-const LOGIN_ENDPOINT = '/login';
-const REGISTER_ENDPOINT = '/register';
+import { LOGIN_ENDPOINT, REGISTER_ENDPOINT } from './endpoints';
 
 class AuthService {
     constructor(serviceEndpoint) {

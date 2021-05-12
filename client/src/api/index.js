@@ -1,8 +1,5 @@
 import Auth from './auth.service';
-
-const ROOT_ENDPOINT = '/api/v1';
-const AUTH_ENDPOINT = '/auth';
-//const USERS_ENDPOINT = '/users';
+import { ROOT_ENDPOINT, AUTH_ENDPOINT, USERS_ENDPOINT } from './endpoints';
 
 class API {
     constructor(rootEndpoint) {
