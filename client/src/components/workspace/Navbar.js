@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { logout } from '../../reducers/auth.slice';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -13,6 +14,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 export default function Navbar() {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const userName = useSelector(state => state.user.data?.name);
 
     return (
         <AppBar posiiton='fixed' className={classes.container}>
@@ -24,7 +26,7 @@ export default function Navbar() {
                     Application Name
                 </Typography>
                 <Typography variant="h6" className={classes.username}>
-                    User Name
+                    { userName }
                 </Typography>
                 <Button color="inherit" onClick={() => { dispatch(logout()); }}>Logout</Button>
             </Toolbar>

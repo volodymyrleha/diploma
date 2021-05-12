@@ -28,7 +28,7 @@ const trainModel = async encoder => {
   const xTrain = await encodeData(encoder, trainTasks);
 
   const yTrain = tf.tensor2d(
-    trainTasks.map(t => [t.icon === "BOOK" ? 1 : 0, t.icon === "RUN" ? 1 : 0])
+    trainTasks.map(t => [t.class === "LEARN" ? 1 : 0, t.class === "RUN" ? 1 : 0])
   );
 
   const model = tf.sequential();
@@ -64,11 +64,11 @@ const trainModel = async encoder => {
   });
 
   await model.save(`localstorage://${MODEL_NAME}`);
-  console.log('trainer');
+  console.log('saved and trained');
   return model;
 };
 
-const suggestIcon = async (model, encoder, taskName, threshold) => {
+const suggestTaskClass = async (model, encoder, taskName, threshold) => {
   if (!taskName.trim().includes(" ")) {
     return null;
   }
@@ -77,7 +77,7 @@ const suggestIcon = async (model, encoder, taskName, threshold) => {
   const prediction = await model.predict(xPredict).data();
 
   if (prediction[0] > threshold) {
-    return "BOOK";
+    return "LEARN";
   } else if (prediction[1] > threshold) {
     return "RUN";
   } else {
@@ -85,4 +85,4 @@ const suggestIcon = async (model, encoder, taskName, threshold) => {
   }
 };
 
-export { suggestIcon, trainModel };
+export { suggestTaskClass, trainModel };

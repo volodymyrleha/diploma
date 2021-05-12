@@ -1,29 +1,40 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import api from '../api';
+
+export const get = createAsyncThunk('user/get', async (payload, { rejectWithValue }) => {
+    const res = await api.user.get();
+
+    if (res.status >= 300)
+        return rejectWithValue(res.data);
+    else 
+        return res.data;
+});
 
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
-        _id: null,
-        name: null,
-        email: null,
-        notes: [],
-        events: [],
-        tasks: [],
+        data: null,
         status: 'idle',
         error: null
     },
-    reducers: {
-        updateUserData: (state, action) => { 
-            state._id = action.payload._id;
-            state.name = action.payload.name;
-            state.email = action.payload.email;
-            state.notes = action.payload.notes;
-            state.events = action.payload.events;
-            state.tasks = action.payload.tasks;
-        }
-    }
+    extraReducers: {
+        [get.pending]: (state) => {
+            state.data = null;
+            state.status = 'pending';
+            state.error = null;
+        },
+        [get.fulfilled]: (state, action) => {
+            state.data = action.payload;
+            state.status = 'idle';
+            state.error = null;
+        },
+        [get.rejected]: (state, action) => {
+            state.data = null;
+            state.status = 'idle';
+            state.error = action.payload.error;
+        },
+    },
 });
-
-export const { updateUserData } = userSlice.actions;
 
 export default userSlice.reducer;

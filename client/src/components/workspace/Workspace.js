@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { get } from '../../reducers/user.slice';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import HomeWindow from './HomeWindow';
@@ -9,6 +11,12 @@ import useTab from '../../hooks/useTab';
 
 export default function Workspace() {
     const tabs = useTab('home');
+    const dispatch = useDispatch();
+
+    // FIXME: update user state when he is logged in or registered
+    useEffect(() => {
+        dispatch(get());
+    }, []);
 
     return (
         <>

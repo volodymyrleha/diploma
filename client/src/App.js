@@ -4,12 +4,11 @@ import { useSelector } from 'react-redux';
 import LoginLayout from './components/login/LoginLayout';
 import Workspace from './components/workspace/Workspace';
 import * as use from "@tensorflow-models/universal-sentence-encoder";
-import { suggestIcon } from './model';
+import { suggestTaskClass } from './model';
 import { trainModel } from "./model";
 
 function App() {
   const token = useSelector(state => state.auth.token);
-  const user = useSelector(state => state.user);
   const history = useHistory();
   const [model, setModel] = useState(null);
   const [encoder, setEncoder] = useState(null);
@@ -31,20 +30,15 @@ function App() {
     (async () => {
       if (!model)
         return;
-
-      const predictedIcon = await suggestIcon(
+      const prediction = await suggestTaskClass(
         model,
         encoder,
-        'read harry potter',
+        'do 15 push ups',
         CONFIDENCE_THRESHOLD
       );
-      console.log(predictedIcon);
+      console.log(prediction);
     })()
   });
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
   useEffect(() => {
     if (token)
