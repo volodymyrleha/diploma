@@ -64,7 +64,7 @@ class UserService {
     async deleteNote(noteId) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await apicall(`${this.notesEndpoint}/${noteId}`, 'PUT', {}, this.getToken());
+                const res = await apicall(`${this.notesEndpoint}/${noteId}`, 'DELETE', {}, this.getToken());
                 resolve(res);
 
             } catch (err) {

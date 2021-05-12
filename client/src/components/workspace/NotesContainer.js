@@ -14,6 +14,7 @@ export default function NotesContainer() {
                 notes.map(note => 
                     <Grid key={note._id} className={classes.item} item>
                         <Note 
+                            id={note._id}
                             title={note.title} 
                             description={note.description}
                         />

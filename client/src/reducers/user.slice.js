@@ -20,6 +20,15 @@ export const createNote = createAsyncThunk('user/createNote', async (payload, { 
         return res.data;
 });
 
+export const deleteNote = createAsyncThunk('user/deleteNote', async (id, { rejectWithValue }) => {
+    const res = await api.user.deleteNote(id);
+    
+    if (res.status >= 300)
+        return rejectWithValue(res.data);
+    else 
+        return res.data;
+});
+
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -54,7 +63,20 @@ export const userSlice = createSlice({
         },
         [createNote.rejected]: (state, action) => {
             state.status = 'idle';
-            //state.error = action.payload.error;
+            state.error = action.payload.error;
+        },
+        [deleteNote.pending]: (state) => {
+            state.status = 'pending';
+            state.error = null;
+        },
+        [deleteNote.fulfilled]: (state, action) => {
+            state.data.notes = action.payload;
+            state.status = 'idle';
+            state.error = null;
+        },
+        [deleteNote.rejected]: (state, action) => {
+            state.status = 'idle';
+            state.error = action.payload.error;
         },
     },
 });
