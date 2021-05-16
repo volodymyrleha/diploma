@@ -40,7 +40,7 @@ export const createTask = createAsyncThunk('user/createTask', async (payload, { 
 
 
 // FIXME?: test if id and payload will work together
-export const updateTaskState = createAsyncThunk('user/createTask', async (id, payload, { rejectWithValue }) => {
+export const updateTaskState = createAsyncThunk('user/updateTaskState', async (id, payload, { rejectWithValue }) => {
     const res = await api.user.updateTaskState(id, payload);
     
     if (res.status >= 300)
