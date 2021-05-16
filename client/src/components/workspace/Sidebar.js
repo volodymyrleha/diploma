@@ -2,12 +2,14 @@ import React from 'react';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
+import HomeIcon from '@material-ui/icons/Home';
+import EventNoteIcon from '@material-ui/icons/EventNote';
+import NoteIcon from '@material-ui/icons/Note';
+import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 const drawerWidth = 240;
@@ -60,12 +62,30 @@ function ResponsiveDrawer(props) {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {['Home', 'Tasks', 'Calendar', 'Notes'].map((text, index) => (
-          <ListItem button key={text} onClick={ () => { props.changeTab(text.toLowerCase()); } }>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+          <ListItem button onClick={ () => { props.changeTab('home'); } }>
+            <ListItemIcon>
+              <HomeIcon /> 
+            </ListItemIcon>
+            <ListItemText primary='Home' />
           </ListItem>
-        ))}
+          <ListItem button onClick={ () => { props.changeTab('tasks'); } }>
+            <ListItemIcon>
+              <FormatListBulletedIcon /> 
+            </ListItemIcon>
+            <ListItemText primary='Tasks' />
+          </ListItem>
+          <ListItem button onClick={ () => { props.changeTab('calendar'); } }>
+            <ListItemIcon>
+              <EventNoteIcon /> 
+            </ListItemIcon>
+            <ListItemText primary='Calendar' />
+          </ListItem>
+          <ListItem button onClick={ () => { props.changeTab('notes'); } }>
+            <ListItemIcon>
+              <NoteIcon /> 
+            </ListItemIcon>
+            <ListItemText primary='Notes' />
+          </ListItem>
       </List>
     </div>
   );
