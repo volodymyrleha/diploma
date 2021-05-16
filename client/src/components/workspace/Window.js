@@ -14,7 +14,7 @@ export default function Window({ children }) {
 
 const useStyles = makeStyles({
     container: {
-        paddingLeft: '17em',
+        paddingLeft: '15em',
         paddingTop: '4em',
     },
 });
