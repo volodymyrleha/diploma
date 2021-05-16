@@ -1,5 +1,5 @@
 import apicall from './apicall';
-import { USER_ENDPOINT, NOTES_ENDPOINT, TASKS_ENDPOINT } from './endpoints';
+import { USER_ENDPOINT, NOTES_ENDPOINT, TASKS_ENDPOINT, EVENTS_ENDPOINT } from './endpoints';
 import * as storage from '../utils/storage';
 
 class UserService {
@@ -8,6 +8,7 @@ class UserService {
         this.userEndpoint = serviceEndpoint + USER_ENDPOINT;
         this.notesEndpoint = serviceEndpoint + NOTES_ENDPOINT;
         this.tasksEndpoint = serviceEndpoint + TASKS_ENDPOINT;
+        this.eventsEndpoint = serviceEndpoint + EVENTS_ENDPOINT;
     }
 
     getToken() {
@@ -126,6 +127,18 @@ class UserService {
         return new Promise(async (resolve, reject) => {
             try {
                 const res = await apicall(`${this.tasksEndpoint}/${taskId}`, 'DELETE', {}, this.getToken());
+                resolve(res);
+
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
+
+    async createEvent(payload) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await apicall(this.eventsEndpoint, 'POST', payload, this.getToken());
                 resolve(res);
 
             } catch (err) {

@@ -16,6 +16,7 @@ export default function Workspace() {
     // FIXME: update user state when he is logged in or registered
     useEffect(() => {
         dispatch(get());
+    // eslint-disable-next-line
     }, []);
 
     return (

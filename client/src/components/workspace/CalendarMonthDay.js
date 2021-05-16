@@ -2,17 +2,29 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
-export default function CalendarMonthDay({ day, active, disabled }) {
+export default function CalendarMonthDay({ dayNumber, active, disabled, event }) {
     const classes = useStyles();
 
     return (
-        <Typography 
-            className={`${classes.day} ${active ? classes.active : ''} ${disabled ? classes.disabled : ''}`} 
-            variant="body1" 
-            component="p"
-        >
-            { day }
-        </Typography>
+        <>
+            <Typography 
+                className={`${classes.day} ${active ? classes.active : ''} ${disabled ? classes.disabled : ''}`} 
+                variant="body1" 
+                component="p"
+            >
+                { dayNumber }
+            </Typography>
+            {
+                event ? 
+                <Typography 
+                    className={classes.event}
+                    variant="body1" 
+                    component="p"
+                >
+                    { event }
+                </Typography> : undefined
+            }
+        </>
     );
 }
 
@@ -36,5 +48,12 @@ const useStyles = makeStyles({
     },
     disabled: {
         color: '#949494',
-    }
+    },
+    event: {
+        backgroundColor: '#357a38',
+        padding: '0.2em 1em',
+        marginTop: '3.8em',
+        borderRadius: '0.3em',
+        color: 'white',
+    },
 });

@@ -58,6 +58,15 @@ export const deleteTask = createAsyncThunk('user/deleteTask', async (id, { rejec
         return res.data;
 });
 
+export const createEvent = createAsyncThunk('user/createEvent', async (payload, { rejectWithValue }) => {
+    const res = await api.user.createEvent(payload);
+    
+    if (res.status >= 300)
+        return rejectWithValue(res.data);
+    else 
+        return res.data;
+});
+
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -130,6 +139,19 @@ export const userSlice = createSlice({
             state.error = null;
         },
         [deleteTask.rejected]: (state, action) => {
+            state.status = 'idle';
+            state.error = action.payload.error;
+        },
+        [createEvent.pending]: (state) => {
+            state.status = 'pending';
+            state.error = null;
+        },
+        [createEvent.fulfilled]: (state, action) => {
+            state.data.events = state.data.events.concat(action.payload);
+            state.status = 'idle';
+            state.error = null;
+        },
+        [createEvent.rejected]: (state, action) => {
             state.status = 'idle';
             state.error = action.payload.error;
         },

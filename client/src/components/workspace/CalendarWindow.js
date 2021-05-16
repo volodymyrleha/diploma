@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -10,9 +10,19 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { makeStyles } from '@material-ui/core/styles';
 import Window from './Window';
 import CalendarMonth from './CalendarMonth';
+import EventCreateDialog from './EventCreateDialog';
 
 export default function CalenderWindow() {
     const classes = useStyles();
+    const [isEventCreateDialogOpen, setIsEventCreateDialogOpen] = useState(false);
+
+    const openEventCreateDialog = () => {
+        setIsEventCreateDialogOpen(true);
+    }
+
+    const closeEventCreateDialog = () => {
+        setIsEventCreateDialogOpen(false);
+    }
 
     return (
         <Window>
@@ -40,9 +50,11 @@ export default function CalenderWindow() {
                 color="primary" 
                 aria-label="add" 
                 className={classes.addbutton} 
+                onClick={openEventCreateDialog}
             >
                 <AddIcon />
             </Fab>
+            <EventCreateDialog isOpen={isEventCreateDialogOpen} close={closeEventCreateDialog} />
         </Window>
     );
 }

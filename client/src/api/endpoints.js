@@ -8,3 +8,4 @@ export const REGISTER_ENDPOINT = '/register';
 export const USER_ENDPOINT = '/self';
 export const NOTES_ENDPOINT = '/self/notes';
 export const TASKS_ENDPOINT = '/self/tasks';
+export const EVENTS_ENDPOINT = '/self/events';
