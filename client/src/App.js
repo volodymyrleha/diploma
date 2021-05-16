@@ -22,12 +22,12 @@ function App() {
       setEncoder(sentenceEncoder);
       setModel(trainedModel);
     };
-    loadModel();
+    //loadModel();
   }, []);
 
 
   useEffect(() => {
-    (async () => {
+    /*(async () => {
       if (!model)
         return;
       const prediction = await suggestTaskClass(
@@ -37,7 +37,7 @@ function App() {
         CONFIDENCE_THRESHOLD
       );
       console.log(prediction);
-    })()
+    })()*/
   });
 
   useEffect(() => {

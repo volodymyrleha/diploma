@@ -29,6 +29,35 @@ export const deleteNote = createAsyncThunk('user/deleteNote', async (id, { rejec
         return res.data;
 });
 
+export const createTask = createAsyncThunk('user/createTask', async (payload, { rejectWithValue }) => {
+    const res = await api.user.createTask(payload);
+    
+    if (res.status >= 300)
+        return rejectWithValue(res.data);
+    else 
+        return res.data;
+});
+
+
+// FIXME?: test if id and payload will work together
+export const updateTaskState = createAsyncThunk('user/createTask', async (id, payload, { rejectWithValue }) => {
+    const res = await api.user.updateTaskState(id, payload);
+    
+    if (res.status >= 300)
+        return rejectWithValue(res.data);
+    else 
+        return res.data;
+});
+
+export const deleteTask = createAsyncThunk('user/deleteTask', async (id, { rejectWithValue }) => {
+    const res = await api.user.deleteTask(id);
+    
+    if (res.status >= 300)
+        return rejectWithValue(res.data);
+    else 
+        return res.data;
+});
+
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -75,6 +104,32 @@ export const userSlice = createSlice({
             state.error = null;
         },
         [deleteNote.rejected]: (state, action) => {
+            state.status = 'idle';
+            state.error = action.payload.error;
+        },
+        [createTask.pending]: (state) => {
+            state.status = 'pending';
+            state.error = null;
+        },
+        [createTask.fulfilled]: (state, action) => {
+            state.data.tasks = state.data.tasks.concat(action.payload);
+            state.status = 'idle';
+            state.error = null;
+        },
+        [createTask.rejected]: (state, action) => {
+            state.status = 'idle';
+            state.error = action.payload.error;
+        },
+        [deleteTask.pending]: (state) => {
+            state.status = 'pending';
+            state.error = null;
+        },
+        [deleteTask.fulfilled]: (state, action) => {
+            state.data.tasks = action.payload;
+            state.status = 'idle';
+            state.error = null;
+        },
+        [deleteTask.rejected]: (state, action) => {
             state.status = 'idle';
             state.error = action.payload.error;
         },
