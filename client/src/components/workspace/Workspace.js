@@ -1,7 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { get } from '../../features/user.slice';
+import Navbar from './Navbar';
+import Sidebar from './Sidebar';
+import HomeWindow from './HomeWindow';
+import CalenderWindow from './CalendarWindow';
+import NotesWindow from './NotesWindow';
+import TasksWindow from './TasksWindow';
+import useTab from '../../hooks/useTab';
 
 export default function Workspace() {
+    const tabs = useTab('home');
+    const dispatch = useDispatch();
+
+    // FIXME: update user state when he is logged in or registered
+    useEffect(() => {
+        dispatch(get());
+    // eslint-disable-next-line
+    }, []);
+
     return (
-        <h1>Workspace</h1>
+        <>
+            <Navbar />
+            <Sidebar changeTab={ tabs.changeTab } />
+            {
+                tabs.current === 'home' ? 
+                    <HomeWindow /> :
+                tabs.current === 'tasks' ?
+                    <TasksWindow /> :
+                tabs.current === 'calendar' ?
+                    <CalenderWindow /> :
+                <NotesWindow />
+            }
+        </>
     );
 }

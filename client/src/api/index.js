@@ -1,4 +1,5 @@
 import Auth from './auth.service';
+import User from './user.service';
 import { ROOT_ENDPOINT, AUTH_ENDPOINT, USERS_ENDPOINT } from './endpoints';
 
 class API {
@@ -22,5 +23,6 @@ class API {
 
 const api = new API(ROOT_ENDPOINT);
 api.addService('auth', AUTH_ENDPOINT, Auth);
+api.addService('user', USERS_ENDPOINT, User);
 
 export default API.getInstance();

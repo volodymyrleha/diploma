@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { login } from '../../reducers/auth.slice';
+import { login } from '../../features/auth.slice';
 import useTextfield from '../../hooks/useTextfield';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
