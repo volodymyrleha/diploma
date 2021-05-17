@@ -5,13 +5,22 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
-export default function Note({ id, title, description }) {
+export default function Note({ id, title, description, openEditDialog }) {
     const classes = useStyles();
     const dispatch = useDispatch();
 
     const handleDelete = () => {
         dispatch(deleteNote(id));
+    }
+
+    const handleEdit = () => {
+        openEditDialog({
+            id,
+            title,
+            description
+        });
     }
 
     return (
@@ -22,6 +31,7 @@ export default function Note({ id, title, description }) {
             <Typography variant="body1" component="p">
                { description }
             </Typography>
+            <EditIcon onClick={ handleEdit } />
             <DeleteIcon onClick={ handleDelete } />
         </Box>
     );

@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from '../api';
 
+// FIXME: need to add a pattern, lots of similar code...
 export const get = createAsyncThunk('user/get', async (payload, { rejectWithValue }) => {
     const res = await api.user.get();
 
@@ -19,6 +20,16 @@ export const createNote = createAsyncThunk('user/createNote', async (payload, { 
     else 
         return res.data;
 });
+
+export const updateNote = createAsyncThunk('user/updateNote', async (payload, { rejectWithValue }) => {
+    const res = await api.user.updateNote(payload.id, payload.body);
+    
+    if (res.status >= 300)
+        return rejectWithValue(res.data);
+    else 
+        return res.data;
+});
+
 
 export const deleteNote = createAsyncThunk('user/deleteNote', async (id, { rejectWithValue }) => {
     const res = await api.user.deleteNote(id);
@@ -100,6 +111,24 @@ export const userSlice = createSlice({
             state.error = null;
         },
         [createNote.rejected]: (state, action) => {
+            state.status = 'idle';
+            state.error = action.payload.error;
+        },
+        [updateNote.pending]: (state) => {
+            state.status = 'pending';
+            state.error = null;
+        },
+        [updateNote.fulfilled]: (state, action) => {
+            state.data.notes = state.data.notes.map(note => { 
+                if (note._id === action.payload._id)
+                    return action.payload;
+                else
+                    return note;
+            });
+            state.status = 'idle';
+            state.error = null;
+        },
+        [updateNote.rejected]: (state, action) => {
             state.status = 'idle';
             state.error = action.payload.error;
         },

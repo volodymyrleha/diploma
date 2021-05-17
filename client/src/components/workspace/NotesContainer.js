@@ -4,7 +4,7 @@ import Note from './Note';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
-export default function NotesContainer() {
+export default function NotesContainer({ openEditDialog }) {
     const classes = useStyles();
     const notes = useSelector(state => state.user.data.notes);
 
@@ -17,6 +17,7 @@ export default function NotesContainer() {
                             id={note._id}
                             title={note.title} 
                             description={note.description}
+                            openEditDialog={openEditDialog}
                         />
                     </Grid>
                 )
