@@ -1,8 +1,8 @@
 const express = require('express');
 const compression = require('compression');
 const path = require('path');
-const router = require('../routes/v1/');
-const errorMiddleware = require('../middlewares/error');
+const router = require('./routes/v1');
+const errorMiddleware = require('./middlewares/error');
 
 const app = express();
 
