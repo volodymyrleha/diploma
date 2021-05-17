@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { get } from '../../reducers/user.slice';
+import { get } from '../../features/user.slice';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import HomeWindow from './HomeWindow';

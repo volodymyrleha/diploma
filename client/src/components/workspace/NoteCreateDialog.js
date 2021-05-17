@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { createNote } from '../../reducers/user.slice';
+import { createNote } from '../../features/user.slice';
 import useTextfield from '../../hooks/useTextfield';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';

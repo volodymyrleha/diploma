@@ -6,7 +6,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import HomeIcon from '@material-ui/icons/Home';
+//import HomeIcon from '@material-ui/icons/Home';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import NoteIcon from '@material-ui/icons/Note';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
@@ -62,12 +62,15 @@ function ResponsiveDrawer(props) {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-          <ListItem button onClick={ () => { props.changeTab('home'); } }>
-            <ListItemIcon>
-              <HomeIcon /> 
-            </ListItemIcon>
-            <ListItemText primary='Home' />
-          </ListItem>
+          {
+            /*
+            <ListItem button onClick={ () => { props.changeTab('home'); } }>
+              <ListItemIcon>
+                <HomeIcon /> 
+              </ListItemIcon>
+              <ListItemText primary='Home' />
+            </ListItem>*/
+          }
           <ListItem button onClick={ () => { props.changeTab('tasks'); } }>
             <ListItemIcon>
               <FormatListBulletedIcon /> 

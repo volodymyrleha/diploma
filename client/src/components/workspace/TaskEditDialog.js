@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateTask } from '../../reducers/user.slice';
+import { updateTask } from '../../features/user.slice';
 import useTextfield from '../../hooks/useTextfield';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
