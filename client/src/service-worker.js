@@ -33,6 +33,12 @@ registerRoute(
       return false;
     } // If this is a URL that starts with /_, skip.
 
+    console.log('SERVICE WORKER URL PATHNAME: ', url.pathname);
+
+    if (url.pathname.startsWith('/API/v1/auth/google') || url.pathname.startsWith('/API/v1/auth/facebook')) {
+      return false;
+    }
+
     if (url.pathname.startsWith('/_')) {
       return false;
     } // If this looks like a URL for a resource, because it contains // a file extension, skip.
@@ -50,7 +56,8 @@ registerRoute(
 // precache, in this case same-origin .png requests like those from in public/
 registerRoute(
   // Add in any other file extensions or routing criteria as needed.
-  ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.png'), // Customize this strategy as needed, e.g., by changing to CacheFirst.
+  ({ url }) => ((url.origin === self.location.origin) && url.pathname.endsWith('.png')) || 
+                                (self.location.origin && url.pathname.endsWith('.ico')), // Customize this strategy as needed, e.g., by changing to CacheFirst.
   new StaleWhileRevalidate({
     cacheName: 'images',
     plugins: [
@@ -60,6 +67,19 @@ registerRoute(
     ],
   })
 );
+
+registerRoute(
+    // Add in any other file extensions or routing criteria as needed.
+    ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.json'), // Customize this strategy as needed, e.g., by changing to CacheFirst.
+    new StaleWhileRevalidate({
+      cacheName: 'manifest',
+      plugins: [
+        // Ensure that once this runtime cache reaches a maximum size the
+        // least-recently used images are removed.
+        new ExpirationPlugin({ maxEntries: 50 }),
+      ],
+    })
+  );
 
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
