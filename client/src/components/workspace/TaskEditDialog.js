@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { createTask } from '../../reducers/user.slice';
+import { updateTask } from '../../reducers/user.slice';
 import useTextfield from '../../hooks/useTextfield';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -13,26 +13,38 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 
-export default function TaskCreateDialog({ isOpen, close }) {
+export default function TaskEditDialog({ isOpen, close, task }) {
     const dispatch = useDispatch();
-    const title = useTextfield();
-    const description = useTextfield();
-    const state = useTextfield({ value: 0 });
+    const title = useTextfield({ value: task.title });
+    const description = useTextfield({ value: task.description });
+    const state = useTextfield({ value: task.state });
+
+    useEffect(() => {
+        if (isOpen) {
+            title.setValue(task?.title);
+            description.setValue(task?.description);
+            state.setValue(task?.state);
+        }
+        // eslint-disable-next-line
+    }, [isOpen]);
     
-    const create = () => {
+    const handleEdit = () => {
         const body = {
             title: title.value,
             description: description.value,
-            state: state.value,
+            state: state.value
         }
 
-        dispatch(createTask(body));
+        dispatch(updateTask({ 
+            id: task.id, 
+            body, 
+        }));
         close();
     }
 
     return (
         <Dialog open={isOpen}>
-            <DialogTitle>Create a New Task</DialogTitle>
+            <DialogTitle>Edit Task</DialogTitle>
             <DialogContent>
                 <TextField
                     value={title.value}
@@ -66,8 +78,8 @@ export default function TaskCreateDialog({ isOpen, close }) {
                 <Button onClick={close} color="primary">
                     Cancel
                 </Button>
-                <Button onClick={create} color="primary">
-                    Create
+                <Button onClick={handleEdit} color="primary">
+                    Edit
                 </Button>
             </DialogActions>
         </Dialog>

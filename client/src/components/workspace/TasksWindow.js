@@ -7,12 +7,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import Window from './Window';
 import TasksList from './TasksList';
 import TaskCreateDialog from './TaskCreateDialog';
+import TaskEditDialog from './TaskEditDialog';
 
 export default function TasksWindow() {
     const classes = useStyles();
     const [isTaskCreateDialogOpen, setIsTaskCreateDialogOpen] = useState(false);
+    const [isTaskEditDialogOpen, setIsTaskEditDialogOpen] = useState(false);
     const [tasksToRender, setTasksToRender] = useState({ todo: [], inProgress: [], done: [] });
     const tasks = useSelector(state => state.user.data.tasks);
+    const [taskToEdit, setTaskToEdit] = useState({});
 
     useEffect(() => {
         const todo = tasks.filter(task => task.state === 0);
@@ -34,18 +37,42 @@ export default function TasksWindow() {
         setIsTaskCreateDialogOpen(false);
     }
 
+    const openTaskEditDialog = (task) => {
+        setTaskToEdit(task);
+        setIsTaskEditDialogOpen(true);
+    }
+
+    const closeTaskEditDialog = () => {
+        setIsTaskEditDialogOpen(false);
+    }
+
     return (
         <>
             <Window>
                 <Grid className={classes.container} container spacing={7}>
                     <Grid item xs={4}>
-                        <TasksList header='Todo' tasks={tasksToRender.todo} />
+                        <TasksList 
+                            header='Todo' 
+                            tasks={tasksToRender.todo} 
+                            state={0}
+                            openEditDialog={openTaskEditDialog}
+                        />
                     </Grid>
                     <Grid item xs={4}>
-                        <TasksList header='In Progress' tasks={tasksToRender.inProgress} />
+                        <TasksList 
+                            header='In Progress' 
+                            tasks={tasksToRender.inProgress} 
+                            state={1}
+                            openEditDialog={openTaskEditDialog}
+                        />
                     </Grid>
                     <Grid item xs={4}>
-                        <TasksList header='Done' tasks={tasksToRender.done} />
+                        <TasksList 
+                            header='Done' 
+                            tasks={tasksToRender.done} 
+                            state={2} 
+                            openEditDialog={openTaskEditDialog}
+                        />
                     </Grid>
                 </Grid>
                 <Fab 
@@ -58,6 +85,7 @@ export default function TasksWindow() {
                 </Fab>
             </Window>
             <TaskCreateDialog isOpen={isTaskCreateDialogOpen} close={closeTaskCreateDialog} />
+            <TaskEditDialog isOpen={isTaskEditDialogOpen} close={closeTaskEditDialog} task={taskToEdit} />
         </>
     );
 }

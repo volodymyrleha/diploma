@@ -49,6 +49,14 @@ export const createTask = createAsyncThunk('user/createTask', async (payload, { 
         return res.data;
 });
 
+export const updateTask = createAsyncThunk('user/updateTask', async (payload, { rejectWithValue }) => {
+    const res = await api.user.updateTask(payload.id, payload.body);
+    
+    if (res.status >= 300)
+        return rejectWithValue(res.data);
+    else 
+        return res.data;
+});
 
 // FIXME?: test if id and payload will work together
 export const updateTaskState = createAsyncThunk('user/updateTaskState', async (id, payload, { rejectWithValue }) => {
@@ -155,6 +163,24 @@ export const userSlice = createSlice({
             state.error = null;
         },
         [createTask.rejected]: (state, action) => {
+            state.status = 'idle';
+            state.error = action.payload.error;
+        },
+        [updateTask.pending]: (state) => {
+            state.status = 'pending';
+            state.error = null;
+        },
+        [updateTask.fulfilled]: (state, action) => {
+            state.data.tasks = state.data.tasks.map(task => { 
+                if (task._id === action.payload._id)
+                    return action.payload;
+                else
+                    return task;
+            });
+            state.status = 'idle';
+            state.error = null;
+        },
+        [updateTask.rejected]: (state, action) => {
             state.status = 'idle';
             state.error = action.payload.error;
         },

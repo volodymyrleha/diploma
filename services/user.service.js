@@ -323,7 +323,8 @@ class UserService {
 
                 const task = await new TaskModel({
                     title: body.title,
-                    description: body.description ? body.description : ''
+                    description: body.description ? body.description : '',
+                    state: body.state
                 });
 
                 if (deadline)   
@@ -368,7 +369,7 @@ class UserService {
 
                 let state = null;
 
-                if (body.state) {
+                if (typeof body.state !== 'undefined') {
                     state = body.state;
 
                     if (state < 0 || state > 2)
@@ -381,7 +382,7 @@ class UserService {
                 if (deadline)
                     task.deadline = deadline;
 
-                if (state)
+                if (state !== null)
                     task.state = state;
 
                 user.save();

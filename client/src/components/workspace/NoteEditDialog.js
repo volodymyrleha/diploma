@@ -9,7 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-export default function NoteCreateDialog({ isOpen, close, note }) {
+export default function NoteEditDialog({ isOpen, close, note }) {
     const dispatch = useDispatch();
     const title = useTextfield({ value: note.title });
     const description = useTextfield({ value: note.description });
