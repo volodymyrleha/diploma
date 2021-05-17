@@ -5,7 +5,7 @@ const { TaskModel } = require('../models/task');
 const ObjectId = require('mongoose').Types.ObjectId;
 const { BadRequestError, NotFoundError, ServerError } = require('../utils/error-handler');
 const PasswordHasher = require('../utils/password-hasher');
-const Logger = require('../utils/logger');
+const Logger = require('../utils/Logger');
 
 const logger = new Logger('userservice');
 const hasher = new PasswordHasher();
