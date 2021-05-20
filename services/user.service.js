@@ -321,10 +321,15 @@ class UserService {
                         return reject(new BadRequestError('deadline is not correct'));
                 }
 
+                let labels = [];
+                if (body.labels.length)
+                    labels = body.labels;
+
                 const task = await new TaskModel({
                     title: body.title,
                     description: body.description ? body.description : '',
-                    state: body.state
+                    state: body.state,
+                    labels: labels,
                 });
 
                 if (deadline)   
@@ -384,6 +389,12 @@ class UserService {
 
                 if (state !== null)
                     task.state = state;
+
+                let labels = [];
+                if (body.labels.length)
+                    labels = body.labels;
+
+                task.labels = labels;
 
                 user.save();
 

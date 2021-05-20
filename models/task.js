@@ -20,7 +20,8 @@ const schema = new Schema({
         type: Number,        
         required: true,
         default: 0,
-    }
+    },
+    labels: [String]
 });
 
 module.exports = {

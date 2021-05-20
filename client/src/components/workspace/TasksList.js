@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Task from './Task';
 
-export default function TasksList({ header, tasks, state, openEditDialog }) {
+export default function TasksList({ header, tasks, openEditDialog }) {
     const classes = useStyles();
 
     return (
@@ -21,7 +21,8 @@ export default function TasksList({ header, tasks, state, openEditDialog }) {
                                 id={item._id} 
                                 title={item.title} 
                                 description={item.description} 
-                                state={state} 
+                                state={item.state}
+                                labels={item.labels}
                                 openEditDialog={openEditDialog}
                             />
                         </GridListTile>
