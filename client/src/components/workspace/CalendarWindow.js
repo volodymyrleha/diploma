@@ -11,10 +11,27 @@ import { makeStyles } from '@material-ui/core/styles';
 import Window from './Window';
 import CalendarMonth from './CalendarMonth';
 import EventCreateDialog from './EventCreateDialog';
+import useTab from '../../hooks/useTab';
 
 export default function CalenderWindow() {
     const classes = useStyles();
+    const calendarView = useTab('month');
     const [isEventCreateDialogOpen, setIsEventCreateDialogOpen] = useState(false);
+    const [activeDay, setActiveDay] = useState(new Date());
+
+    const getActiveMonthName = () => {
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        return `${monthNames[activeDay.getMonth()]} - ${activeDay.getFullYear()}`;
+    }
+
+    const getActiveDayName = () => {
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        return `${activeDay.getDate()}.${activeDay.getMonth() + 1}.${activeDay.getFullYear()} - ${days[activeDay.getDay()]}`;
+    }
 
     const openEventCreateDialog = () => {
         setIsEventCreateDialogOpen(true);
@@ -22,6 +39,36 @@ export default function CalenderWindow() {
 
     const closeEventCreateDialog = () => {
         setIsEventCreateDialogOpen(false);
+    }
+
+    const goBack = () => {
+        switch (calendarView.current) {
+            case "month":
+                setActiveDay(new Date(activeDay.setMonth(activeDay.getMonth() - 1)));
+                break;
+            case "week":
+            case "day":
+                setActiveDay(new Date(activeDay.setDate(activeDay.getDate() - 1)));
+                break;
+            default:
+                setActiveDay(new Date(activeDay.setMonth(activeDay.getMonth() - 1)));
+                break;
+        }
+    }
+
+    const goForward = () => {
+        switch (calendarView.current) {
+            case "month":
+                setActiveDay(new Date(activeDay.setMonth(activeDay.getMonth() + 1)));
+                break;
+            case "week":
+            case "day":
+                setActiveDay(new Date(activeDay.setDate(activeDay.getDate() + 1)));
+                break;
+            default:
+                setActiveDay(new Date(activeDay.setMonth(activeDay.getMonth() + 1)));
+                break;
+        }
     }
 
     return (
@@ -32,17 +79,38 @@ export default function CalenderWindow() {
                 </Typography>
                 <Grid item>
                     <Grid container alignItems="center">
-                        <KeyboardArrowLeftIcon />
+                        <KeyboardArrowLeftIcon onClick={goBack} />
                         <Typography variant="h5" component="h5">
-                            Month
+                            { 
+                                calendarView.current === "month" ?
+                                    getActiveMonthName() :
+                                calendarView.current === "day" ?
+                                    getActiveDayName() :
+                                    calendarView.current
+                            }
                         </Typography>
-                        <KeyboardArrowRightIcon />
+                        <KeyboardArrowRightIcon onClick={goForward} />
                     </Grid>
                 </Grid>
                 <ButtonGroup color="primary" aria-label="outlined primary button group">
-                    <Button>Day</Button>
-                    <Button>Week</Button>
-                    <Button>Month</Button>
+                    <Button 
+                        onClick={() => calendarView.changeTab("day") }
+                        variant={calendarView.current === "day" ? "contained" : "outlined"}
+                    >
+                        Day
+                    </Button>
+                    <Button 
+                        onClick={() => calendarView.changeTab("week") }
+                        variant={calendarView.current === "week" ? "contained" : "outlined"}
+                    >
+                        Week
+                    </Button>
+                    <Button 
+                        onClick={() => calendarView.changeTab("month") }
+                        variant={calendarView.current === "month" ? "contained" : "outlined"}
+                    >
+                        Month
+                    </Button>
                 </ButtonGroup>
             </Grid>
             <CalendarMonth />
