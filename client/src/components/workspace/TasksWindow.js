@@ -54,7 +54,6 @@ export default function TasksWindow() {
                         <TasksList 
                             header='Todo' 
                             tasks={tasksToRender.todo} 
-                            state={0}
                             openEditDialog={openTaskEditDialog}
                         />
                     </Grid>
@@ -62,7 +61,6 @@ export default function TasksWindow() {
                         <TasksList 
                             header='In Progress' 
                             tasks={tasksToRender.inProgress} 
-                            state={1}
                             openEditDialog={openTaskEditDialog}
                         />
                     </Grid>
@@ -70,7 +68,6 @@ export default function TasksWindow() {
                         <TasksList 
                             header='Done' 
                             tasks={tasksToRender.done} 
-                            state={2} 
                             openEditDialog={openTaskEditDialog}
                         />
                     </Grid>
