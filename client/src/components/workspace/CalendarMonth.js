@@ -5,7 +5,7 @@ import GridListTile from '@material-ui/core/GridListTile';
 import { makeStyles } from '@material-ui/core/styles';
 import CalendarMonthDay from './CalendarMonthDay';
 
-export default function CalendarMonth() {
+export default function CalendarMonth({activeDate}) {
     const classes = useStyles();
     const events = useSelector(state => state.user.data.events);
 
@@ -17,7 +17,7 @@ export default function CalendarMonth() {
     }   
 
     const getDaysOfPreviousMonth = () => {
-        const lastDayOfPreviousMonth = new Date();
+        const lastDayOfPreviousMonth = new Date(activeDate);
         lastDayOfPreviousMonth.setDate(1);
         lastDayOfPreviousMonth.setHours(-1);
 
@@ -25,7 +25,7 @@ export default function CalendarMonth() {
     }
 
     const getFirstDayWeekOfMonth = () => {
-        const firstDay = new Date();
+        const firstDay = new Date(activeDate);
         firstDay.setDate(1);
 
         const dayOfWeek = firstDay.getDay();
@@ -34,13 +34,12 @@ export default function CalendarMonth() {
     }
 
     const getDaysOfMonthView = () => {
-        const today = new Date();
-        const currentMonth = getDaysInMonth(today);
+        const currentMonth = getDaysInMonth(activeDate);
         const prevMonth = getDaysOfPreviousMonth();
         const prevMonthOffset = getFirstDayWeekOfMonth();
 
         const daysToRender = [];
-        const dateOfView = new Date();
+        const dateOfView = new Date(activeDate);
         if (prevMonthOffset) {
             dateOfView.setDate(1);
             dateOfView.setHours(-1);
@@ -61,13 +60,14 @@ export default function CalendarMonth() {
             dateOfView.setDate(dateOfView.getDate() + 1);
         }
 
+        const today = new Date();
         const currentDay = today.getDate();
 
         for (let i = 0; i < currentMonth; i++) {
             daysToRender.push({ 
                 dayNumber: i + 1,
                 date: new Date(dateOfView),
-                active: i + 1 === currentDay,
+                active: (i + 1 === currentDay) && (today.getMonth() === activeDate.getMonth()) && (today.getFullYear() === activeDate.getFullYear()),
                 disabled: false,
             });
 

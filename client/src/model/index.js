@@ -79,7 +79,7 @@ const suggestTaskClass = async (model, encoder, taskName, threshold) => {
   if (prediction[0] > threshold) {
     return "LEARN";
   } else if (prediction[1] > threshold) {
-    return "RUN";
+    return "EXERCISE";
   } else {
     return null;
   }

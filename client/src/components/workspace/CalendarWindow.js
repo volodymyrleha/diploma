@@ -10,6 +10,8 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { makeStyles } from '@material-ui/core/styles';
 import Window from './Window';
 import CalendarMonth from './CalendarMonth';
+import CalendarDayView from './CalendarDayView';
+import CalendarWeekView from './CalendarWeekView';
 import EventCreateDialog from './EventCreateDialog';
 import useTab from '../../hooks/useTab';
 
@@ -17,7 +19,7 @@ export default function CalenderWindow() {
     const classes = useStyles();
     const calendarView = useTab('month');
     const [isEventCreateDialogOpen, setIsEventCreateDialogOpen] = useState(false);
-    const [activeDay, setActiveDay] = useState(new Date());
+    const [activeDate, setActiveDate] = useState(new Date());
 
     const getActiveMonthName = () => {
         const monthNames = [
@@ -25,12 +27,12 @@ export default function CalenderWindow() {
             "July", "August", "September", "October", "November", "December"
         ];
 
-        return `${monthNames[activeDay.getMonth()]} - ${activeDay.getFullYear()}`;
+        return `${monthNames[activeDate.getMonth()]} - ${activeDate.getFullYear()}`;
     }
 
     const getActiveDayName = () => {
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        return `${activeDay.getDate()}.${activeDay.getMonth() + 1}.${activeDay.getFullYear()} - ${days[activeDay.getDay()]}`;
+        return `${activeDate.getDate()}.${activeDate.getMonth() + 1}.${activeDate.getFullYear()} - ${days[activeDate.getDay()]}`;
     }
 
     const openEventCreateDialog = () => {
@@ -44,14 +46,14 @@ export default function CalenderWindow() {
     const goBack = () => {
         switch (calendarView.current) {
             case "month":
-                setActiveDay(new Date(activeDay.setMonth(activeDay.getMonth() - 1)));
+                setActiveDate(new Date(activeDate.setMonth(activeDate.getMonth() - 1)));
                 break;
             case "week":
             case "day":
-                setActiveDay(new Date(activeDay.setDate(activeDay.getDate() - 1)));
+                setActiveDate(new Date(activeDate.setDate(activeDate.getDate() - 1)));
                 break;
             default:
-                setActiveDay(new Date(activeDay.setMonth(activeDay.getMonth() - 1)));
+                setActiveDate(new Date(activeDate.setMonth(activeDate.getMonth() - 1)));
                 break;
         }
     }
@@ -59,14 +61,14 @@ export default function CalenderWindow() {
     const goForward = () => {
         switch (calendarView.current) {
             case "month":
-                setActiveDay(new Date(activeDay.setMonth(activeDay.getMonth() + 1)));
+                setActiveDate(new Date(activeDate.setMonth(activeDate.getMonth() + 1)));
                 break;
             case "week":
             case "day":
-                setActiveDay(new Date(activeDay.setDate(activeDay.getDate() + 1)));
+                setActiveDate(new Date(activeDate.setDate(activeDate.getDate() + 1)));
                 break;
             default:
-                setActiveDay(new Date(activeDay.setMonth(activeDay.getMonth() + 1)));
+                setActiveDate(new Date(activeDate.setMonth(activeDate.getMonth() + 1)));
                 break;
         }
     }
@@ -113,7 +115,13 @@ export default function CalenderWindow() {
                     </Button>
                 </ButtonGroup>
             </Grid>
-            <CalendarMonth />
+            {
+                calendarView.current === "month" ?
+                    <CalendarMonth activeDate={activeDate} /> :
+                calendarView.current === "week" ?
+                    <CalendarWeekView /> :
+                    <CalendarDayView />
+            }
             <Fab 
                 color="primary" 
                 aria-label="add" 
