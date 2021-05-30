@@ -35,7 +35,7 @@ const useStyles = makeStyles({
     container: {
         backgroundColor: '#F5F5F5',
         overflowY: 'auto',
-        height: '80vh',
+        height: '74vh',
         border: "1.2em solid #F5F5F5"
     },
     header: {
