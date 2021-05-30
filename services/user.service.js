@@ -391,7 +391,7 @@ class UserService {
                     task.state = state;
 
                 let labels = [];
-                if (body.labels.length)
+                if (body.labels?.length)
                     labels = body.labels;
 
                 task.labels = labels;

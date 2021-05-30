@@ -7,6 +7,7 @@ const trainTasks = learnTodos.concat(exerciseTodos);
 
 const MODEL_NAME = "suggestion-model";
 const N_CLASSES = 2;
+const CONFIDENCE_THRESHOLD = 0.65;
 
 const encodeData = async (encoder, tasks) => {
   const sentences = tasks.map(t => t.text.toLowerCase());
@@ -28,7 +29,7 @@ const trainModel = async encoder => {
   const xTrain = await encodeData(encoder, trainTasks);
 
   const yTrain = tf.tensor2d(
-    trainTasks.map(t => [t.class === "LEARN" ? 1 : 0, t.class === "RUN" ? 1 : 0])
+    trainTasks.map(t => [t.class === "LEARN" ? 1 : 0, t.class === "Exercise" ? 1 : 0])
   );
 
   const model = tf.sequential();
@@ -79,10 +80,10 @@ const suggestTaskClass = async (model, encoder, taskName, threshold) => {
   if (prediction[0] > threshold) {
     return "LEARN";
   } else if (prediction[1] > threshold) {
-    return "EXERCISE";
+    return "Exercise";
   } else {
     return null;
   }
 };
 
-export { suggestTaskClass, trainModel };
+export { suggestTaskClass, trainModel, CONFIDENCE_THRESHOLD };
