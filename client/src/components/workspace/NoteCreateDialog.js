@@ -8,11 +8,13 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
 
 export default function NoteCreateDialog({ isOpen, close }) {
     const dispatch = useDispatch();
     const title = useTextfield();
     const description = useTextfield();
+    const classes = useStyles();
     
     const create = () => {
         const payload = {
@@ -27,8 +29,9 @@ export default function NoteCreateDialog({ isOpen, close }) {
     return (
         <Dialog open={isOpen}>
             <DialogTitle>Create a New Note</DialogTitle>
-            <DialogContent>
+            <DialogContent className={classes.container}>
                 <TextField
+                    className={classes.field}
                     value={title.value}
                     onChange={title.handleChange}
                     autoFocus
@@ -36,6 +39,7 @@ export default function NoteCreateDialog({ isOpen, close }) {
                     fullWidth
                 />
                 <TextField
+                    className={classes.field}
                     value={description.value}
                     onChange={description.handleChange}
                     label="Description"
@@ -56,3 +60,12 @@ export default function NoteCreateDialog({ isOpen, close }) {
         </Dialog>
     );
 }
+
+const useStyles = makeStyles({
+    container: {
+        width: "32em",
+    },
+    field: {
+        marginBottom: "1.2em",
+    },
+});
