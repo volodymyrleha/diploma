@@ -86,6 +86,24 @@ export const createEvent = createAsyncThunk('user/createEvent', async (payload, 
         return res.data;
 });
 
+export const updateEvent = createAsyncThunk('user/updateEvent', async (payload, { rejectWithValue }) => {
+    const res = await api.user.updateEvent(payload.id, payload.body);
+    
+    if (res.status >= 300)
+        return rejectWithValue(res.data);
+    else 
+        return res.data;
+});
+
+export const deleteEvent = createAsyncThunk('user/deleteEvent', async (id, { rejectWithValue }) => {
+    const res = await api.user.deleteEvent(id);
+    
+    if (res.status >= 300)
+        return rejectWithValue(res.data);
+    else 
+        return res.data;
+});
+
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -207,6 +225,37 @@ export const userSlice = createSlice({
             state.error = null;
         },
         [createEvent.rejected]: (state, action) => {
+            state.status = 'idle';
+            state.error = action.payload.error;
+        },
+        [updateEvent.pending]: (state) => {
+            state.status = 'pending';
+            state.error = null;
+        },
+        [updateEvent.fulfilled]: (state, action) => {
+            state.data.events = state.data.events.map(event => { 
+                if (event._id === action.payload._id)
+                    return action.payload;
+                else
+                    return event;
+            });
+            state.status = 'idle';
+            state.error = null;
+        },
+        [updateEvent.rejected]: (state, action) => {
+            state.status = 'idle';
+            state.error = action.payload.error;
+        },
+        [deleteEvent.pending]: (state) => {
+            state.status = 'pending';
+            state.error = null;
+        },
+        [deleteEvent.fulfilled]: (state, action) => {
+            state.data.events = action.payload;
+            state.status = 'idle';
+            state.error = null;
+        },
+        [deleteEvent.rejected]: (state, action) => {
             state.status = 'idle';
             state.error = action.payload.error;
         },

@@ -2,11 +2,24 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import EventDetailsDialog from './EventDetailsDialog';
 
 const ALL_DAY = 1440;
 
 export default function CalendarMonthDay({ dayNumber, active, disabled, events }) {
     const classes = useStyles();
+    const [eventToShow, setEventToShow] = React.useState(null);
+    const [isEventDialogOpen, setIsEventDialogOpen] = React.useState(false);
+
+    const openEventDialog = (event) => {
+        setEventToShow(event);
+        setIsEventDialogOpen(true);
+    }
+
+    const closeEventDialog = () => {
+        setIsEventDialogOpen(false);
+        setEventToShow(null);
+    }
 
     return (
         <>
@@ -24,12 +37,14 @@ export default function CalendarMonthDay({ dayNumber, active, disabled, events }
                         className={`${classes.event} ${event.duration < ALL_DAY ? classes.smallEvent : ''}`}
                         variant="body1" 
                         component="p"
+                        onClick={() => {openEventDialog(event)}}
                     >
                         <FiberManualRecordIcon className={classes.dot} />
                         {event.title}
                     </Typography>
                 ) : undefined
             }
+            <EventDetailsDialog open={isEventDialogOpen} onClose={closeEventDialog} event={eventToShow} />
         </>
     );
 }
