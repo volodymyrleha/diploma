@@ -92,21 +92,25 @@ export default function CalendarMonth({activeDate}) {
     }
     
     const days = getDaysOfMonthView();
-    const eventsPrepared = events.map(item => ({ 
+    const eventsPrepared = events.map(item => ({
+        id: item._id,
         date: (new Date(item.date)).setHours(0, 0, 0, 0),
         title: item.title,
+        description: item.description,
+        startDate: item.date,
+        duration: item.duration,
     }));
 
     const daysToRender = days.map(
         item => {
-            const eventToRender = eventsPrepared.filter(event => event.date === item.date.getTime())[0];
+            const eventsToRender = eventsPrepared.filter(event => event.date === item.date.getTime());
             
             return (
                 <CalendarMonthDay 
                     dayNumber={item.dayNumber} 
                     active={item.active} 
                     disabled={item.disabled} 
-                    event={eventToRender ? eventToRender.title : null} 
+                    events={eventsToRender}
                 />
             );
         }
@@ -136,5 +140,5 @@ const useStyles = makeStyles({
         borderRight: '1px solid #ECECEC',
         borderBottom: '1px solid #ECECEC',
         position: 'relative',
-    }
+    },
 });
