@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,6 +8,7 @@ import CalendarWeekHeader from './CalendarWeekHeader';
 
 export default function CalendarWeekView({ activeDate }) {
     const classes = useStyles();
+    const events = useSelector(state => state.user.data.events);
 
     const getFirstDayOfTheWeek = (date) => {
         const day = date.getDay(),
@@ -16,6 +18,7 @@ export default function CalendarWeekView({ activeDate }) {
 
     const firstDay = getFirstDayOfTheWeek(activeDate);
     const temp = new Date(firstDay);
+    temp.setHours(0, 0, 0, 0);
     const days = [
         firstDay,
         new Date(temp.setDate(temp.getDate() + 1)),
@@ -25,17 +28,28 @@ export default function CalendarWeekView({ activeDate }) {
         new Date(temp.setDate(temp.getDate() + 1)),
         new Date(temp.setDate(temp.getDate() + 1)),
     ];
+
+    const eventsPrepared = events.map(item => ({
+        id: item._id,
+        date: (new Date(item.date)).setHours(0, 0, 0, 0),
+        title: item.title,
+        description: item.description,
+        startDate: item.date,
+        duration: item.duration,
+    }));
+
+    const eventsForDays = days.map(day => eventsPrepared.filter(event => event.date === day.getTime()));
    
     return (
         <>
-            <Grid className={classes.container} container spacing={1}>
-                <CalendarWeekHeader date={days[0]} />
-                <CalendarWeekHeader date={days[1]} />
-                <CalendarWeekHeader date={days[2]} />
-                <CalendarWeekHeader date={days[3]} />
-                <CalendarWeekHeader date={days[4]} />
-                <CalendarWeekHeader date={days[5]} />
-                <CalendarWeekHeader date={days[6]} />
+            <Grid className={classes.container} container spacing={1} direction="row">
+                <CalendarWeekHeader date={days[0]} events={eventsForDays[0]} />
+                <CalendarWeekHeader date={days[1]} events={eventsForDays[1]} />
+                <CalendarWeekHeader date={days[2]} events={eventsForDays[2]} />
+                <CalendarWeekHeader date={days[3]} events={eventsForDays[3]} />
+                <CalendarWeekHeader date={days[4]} events={eventsForDays[4]} />
+                <CalendarWeekHeader date={days[5]} events={eventsForDays[5]} />
+                <CalendarWeekHeader date={days[6]} events={eventsForDays[6]} />
             </Grid>
             <Grid className={`${classes.container} ${classes.containerHours}`} container spacing={1}>
                 <div className={classes.hoursMarksContainer}>
@@ -112,13 +126,13 @@ export default function CalendarWeekView({ activeDate }) {
                         23:00
                     </Typography>
                 </div>
-                <CalendarWeek date={days[0]} />
-                <CalendarWeek date={days[1]} />
-                <CalendarWeek date={days[2]} />
-                <CalendarWeek date={days[3]} />
-                <CalendarWeek date={days[4]} />
-                <CalendarWeek date={days[5]} />
-                <CalendarWeek date={days[6]} />
+                <CalendarWeek date={days[0]} events={eventsForDays[0]} />
+                <CalendarWeek date={days[1]} events={eventsForDays[1]} />
+                <CalendarWeek date={days[2]} events={eventsForDays[2]} />
+                <CalendarWeek date={days[3]} events={eventsForDays[3]} />
+                <CalendarWeek date={days[4]} events={eventsForDays[4]} />
+                <CalendarWeek date={days[5]} events={eventsForDays[5]} />
+                <CalendarWeek date={days[6]} events={eventsForDays[6]} />
             </Grid>
         </>
     );
@@ -130,7 +144,7 @@ const useStyles = makeStyles({
         margin: '0em 2em',
         paddingLeft: '2em',
         width: 'calc(100% - 4em)',
-        flexGrow: 1,
+        display: "flex",
     },
     containerHours: {
         maxHeight: "68vh",

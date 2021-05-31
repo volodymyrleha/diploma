@@ -1,8 +1,11 @@
 import React from "react";
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
-export default function CalendarWeek({date}) {
+const ALL_DAY = 1440;
+
+export default function CalendarWeek({date, events}) {
     const classes = useStyles();
     const [today, setToday] = React.useState(new Date());
 
@@ -23,12 +26,32 @@ export default function CalendarWeek({date}) {
     
             return () => clearInterval(interval);
         }
+        // eslint-disable-next-line
     }, []);
+
+    const correctEvents = events.filter(event => event.duration < ALL_DAY);
 
     const hours = [];
     for (let i = 0; i < 24; i++) {
         hours.push(
             <div key={i} className={classes.borderedBlock}>
+                {
+                    correctEvents.filter(event => new Date(event.startDate).getHours() === i)
+                        .map(event =>
+                            <Typography 
+                                key={event.id}
+                                className={classes.event}
+                                variant="body1" 
+                                component="p"
+                                style={{
+                                    height: event.duration / 60 * 100 + "%",
+                                    top: new Date(event.startDate).getMinutes() * 100 / 60 + "%",
+                                }}
+                            >
+                                {event.title}
+                            </Typography>
+                        )
+                }
                 {
                     i === today.getHours() && isToday() ? 
                         <>
@@ -76,5 +99,20 @@ const useStyles = makeStyles({
         borderRadius: "50%",
         backgroundColor: "#ea4949",
         zIndex: 3,
-    }
+    },
+    event: {
+        position: "absolute",
+        width: "100%",
+        left: "0",
+        border: '1px solid #66cc3d',
+        borderRadius: "4px",
+        padding: '0.2em 1em',
+        color: '#66cc3d',
+        fontSize: "0.8em",
+        marginBottom: "0.4em",
+        cursor: "pointer",
+        boxSizing: "border-box",
+        backgroundColor: "white",
+        zIndex: 2,
+    },
 });
