@@ -18,8 +18,9 @@ export default function CalendarMonthDay({ dayNumber, active, disabled, events }
                 { dayNumber }
             </Typography>
             {
-                events ? events.map(event => 
+                events ? events.map((event, index) => 
                     <Typography 
+                        key={index}
                         className={`${classes.event} ${event.duration < ALL_DAY ? classes.smallEvent : ''}`}
                         variant="body1" 
                         component="p"

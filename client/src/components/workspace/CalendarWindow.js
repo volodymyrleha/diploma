@@ -31,7 +31,7 @@ export default function CalenderWindow() {
                 calendarView.current === "month" ?
                     <CalendarMonth activeDate={activeDate} /> :
                 calendarView.current === "week" ?
-                    <CalendarWeekView /> :
+                    <CalendarWeekView activeDate={activeDate} /> :
                     <CalendarDayView />
             }
             <Fab 
