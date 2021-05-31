@@ -114,12 +114,12 @@ export default function CalendarHeader({calendarView, activeDate, setActiveDate}
                 </Grid>
             </Grid>
             <ButtonGroup color="primary" aria-label="outlined primary button group">
-                <Button 
+                {/*<Button 
                     onClick={() => calendarView.changeTab("day") }
                     variant={calendarView.current === "day" ? "contained" : "outlined"}
                 >
                     Day
-                </Button>
+                </Button>*/}
                 <Button 
                     onClick={() => calendarView.changeTab("week") }
                     variant={calendarView.current === "week" ? "contained" : "outlined"}

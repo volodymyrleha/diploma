@@ -146,6 +146,30 @@ class UserService {
             }
         });
     }
+
+    async updateEvent(eventId, payload) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await apicall(`${this.eventsEndpoint}/${eventId}`, 'PUT', payload, this.getToken());
+                resolve(res);
+
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
+
+    async deleteEvent(eventId) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await apicall(`${this.eventsEndpoint}/${eventId}`, 'DELETE', {}, this.getToken());
+                resolve(res);
+
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
 }
 
 export default UserService;
