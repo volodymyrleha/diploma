@@ -4,7 +4,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import Window from './Window';
 import CalendarMonth from './CalendarMonth';
-import CalendarDayView from './CalendarDayView';
+//import CalendarDayView from './CalendarDayView';
 import CalendarWeekView from './CalendarWeekView';
 import EventCreateDialog from './EventCreateDialog';
 import CalendarHeader from "./CalenderHeader";
@@ -32,7 +32,7 @@ export default function CalenderWindow() {
                     <CalendarMonth activeDate={activeDate} /> :
                 calendarView.current === "week" ?
                     <CalendarWeekView activeDate={activeDate} /> :
-                    <CalendarDayView />
+                    undefined
             }
             <Fab 
                 color="primary" 

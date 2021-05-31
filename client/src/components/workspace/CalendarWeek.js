@@ -70,7 +70,7 @@ const useStyles = makeStyles({
     timelineCircle: {
         position: "absolute",
         top: "0",
-        right: "-7px",
+        right: "-6.4px",
         width: "12px",
         height: "12px",
         borderRadius: "50%",
