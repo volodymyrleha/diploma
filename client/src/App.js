@@ -1,25 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import LoginLayout from './components/login/LoginLayout';
+import Workspace from './components/workspace/Workspace';
 
 function App() {
+  const token = useSelector(state => state.auth.token);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (token)
+      history.replace('/');
+    else
+      history.replace('/login');
+  }, [token, history]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Switch>
+        <Route exact path="/login" component={ LoginLayout } />
+        <Route exact path="/" component={ Workspace } />
+        <Route render={() => <Redirect to={{ pathname: "/" }} />} />
+      </Switch>
+      {<div id="loss-cont" />}
+    </>
   );
 }
 
