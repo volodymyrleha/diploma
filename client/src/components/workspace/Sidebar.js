@@ -6,7 +6,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-//import HomeIcon from '@material-ui/icons/Home';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import NoteIcon from '@material-ui/icons/Note';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
@@ -45,6 +44,10 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  activeTab: {
+    backgroundColor: "#e9ecff",
+    transition: ".3s",
+  },
 }));
 
 function ResponsiveDrawer(props) {
@@ -62,28 +65,19 @@ function ResponsiveDrawer(props) {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-          {
-            /*
-            <ListItem button onClick={ () => { props.changeTab('home'); } }>
-              <ListItemIcon>
-                <HomeIcon /> 
-              </ListItemIcon>
-              <ListItemText primary='Home' />
-            </ListItem>*/
-          }
-          <ListItem button onClick={ () => { props.changeTab('tasks'); } }>
+          <ListItem className={props.currentTab === "tasks" ? classes.activeTab : ''} button onClick={ () => { props.changeTab('tasks'); } }>
             <ListItemIcon>
               <FormatListBulletedIcon /> 
             </ListItemIcon>
             <ListItemText primary='Tasks' />
           </ListItem>
-          <ListItem button onClick={ () => { props.changeTab('calendar'); } }>
+          <ListItem className={props.currentTab === "calendar" ? classes.activeTab : ''} button onClick={ () => { props.changeTab('calendar'); } }>
             <ListItemIcon>
               <EventNoteIcon /> 
             </ListItemIcon>
             <ListItemText primary='Calendar' />
           </ListItem>
-          <ListItem button onClick={ () => { props.changeTab('notes'); } }>
+          <ListItem className={props.currentTab === "notes" ? classes.activeTab : ''} button onClick={ () => { props.changeTab('notes'); } }>
             <ListItemIcon>
               <NoteIcon /> 
             </ListItemIcon>

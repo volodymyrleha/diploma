@@ -14,7 +14,7 @@ export default function TasksWindow() {
     const [isTaskCreateDialogOpen, setIsTaskCreateDialogOpen] = useState(false);
     const [isTaskEditDialogOpen, setIsTaskEditDialogOpen] = useState(false);
     const [tasksToRender, setTasksToRender] = useState({ todo: [], inProgress: [], done: [] });
-    const tasks = useSelector(state => state.user.data.tasks);
+    const tasks = useSelector(state => state.user.data ? state.user.data.tasks : []);
     const [taskToEdit, setTaskToEdit] = useState({});
 
     useEffect(() => {
@@ -94,9 +94,9 @@ const useStyles = makeStyles({
         right: '3em',
     },
     container: {
-        maxHeight: '80vh',
         width: '100%',
         overflowY: 'hidden',
         paddingTop: '2em',
+        paddingLeft: "3em",
     }
 });

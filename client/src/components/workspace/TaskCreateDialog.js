@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { createTask } from '../../features/user.slice';
 import useTextfield from '../../hooks/useTextfield';
@@ -13,9 +13,8 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import { suggestTaskClass } from '../../model';
-import * as use from "@tensorflow-models/universal-sentence-encoder";
-import { trainModel } from "../../model";
+import useModel from "../../hooks/useModel";
+import { makeStyles } from '@material-ui/core/styles';
 
 export default function TaskCreateDialog({ isOpen, close }) {
     const dispatch = useDispatch();
@@ -23,53 +22,29 @@ export default function TaskCreateDialog({ isOpen, close }) {
     const description = useTextfield();
     const state = useTextfield({ value: 0 });
     const label = useTextfield({ value: 'none' });
-    const [model, setModel] = useState(null);
-    const [encoder, setEncoder] = useState(null);
+    const model = useModel();
     const [suggestion, setSuggestion] = useState(null);
-   
-    const CONFIDENCE_THRESHOLD = 0.65;
+    const classes = useStyles();
 
-    useEffect(() => {
-        (async () => {
-            const loadModel = async () => {
-                const sentenceEncoder = await use.load();
-                const trainedModel = await trainModel(sentenceEncoder);
-                setEncoder(sentenceEncoder);
-                setModel(trainedModel);
-            };
-            await loadModel();
-        })();
-    }, []);
+    React.useEffect(() => {
+        if (!isOpen) {
+            title.setValue("");
+            description.setValue("");
+            state.setValue(0);
+            label.setValue("none");
+            setSuggestion(null);
+        }
+        // eslint-disable-next-line
+    }, [isOpen]);
 
-    let block = false;
-
-    const handleTitle = (e) => {
-        title.handleChange(e);
-
-        if (!model)
-            return;
-
-        if (!encoder)
-            return;
-        
-        if (block)
-            return;
-        
-        block = true;
-
-        setTimeout(async () => {
-            const prediction = await suggestTaskClass(
-                model,
-                encoder,
-                title.value,
-                CONFIDENCE_THRESHOLD
-            );
-
+    React.useEffect(() => {
+        const timer = setTimeout(async () => {
+            const prediction = await model.suggestTaskClass(title.value);
             setSuggestion(prediction);
-
-            block = false;
         }, 400);
-    }
+
+        return () => clearTimeout(timer);
+    }, [title.value, model]);
     
     const create = () => {
         const body = {
@@ -86,15 +61,50 @@ export default function TaskCreateDialog({ isOpen, close }) {
     return (
         <Dialog open={isOpen}>
             <DialogTitle>Create a New Task</DialogTitle>
-            <DialogContent>
+            <DialogContent className={classes.container} >
                 <TextField
+                    className={classes.field}
                     value={title.value}
-                    onChange={handleTitle}
+                    onChange={title.handleChange}
                     autoFocus
                     label="Title"
                     fullWidth
                 />
+                <FormControl>
+                    <InputLabel>Label</InputLabel>
+                    <Select
+                        value={label.value}
+                        onChange={label.handleChange}
+                        className={classes.select}
+                    >
+                        <MenuItem value={'none'}>None</MenuItem>
+                        <MenuItem value={'learn'}>Learn</MenuItem>
+                        <MenuItem value={'exercise'}>Exercise</MenuItem>
+                    </Select>
+                </FormControl>
+                <Typography className={classes.suggestion} variant="body1" component="p">
+                    {
+                        suggestion === 'Exercise' ?
+                            'Label suggestion: Exercise' :
+                        suggestion === 'LEARN' ?
+                            'Label suggestion: Learn' :
+                            'Label suggestion: None'
+                    }
+                </Typography>
+                <FormControl>
+                    <InputLabel>Status</InputLabel>
+                    <Select
+                        value={state.value}
+                        onChange={state.handleChange}
+                        className={`${classes.select} ${classes.field}`}
+                    >
+                        <MenuItem value={0}>Todo</MenuItem>
+                        <MenuItem value={1}>In Progress</MenuItem>
+                        <MenuItem value={2}>Done</MenuItem>
+                    </Select>
+                </FormControl>
                 <TextField
+                    className={classes.field}
                     value={description.value}
                     onChange={description.handleChange}
                     label="Description"
@@ -103,37 +113,6 @@ export default function TaskCreateDialog({ isOpen, close }) {
                     rowsMax={8}
                     fullWidth
                 />
-                <FormControl>
-                    <InputLabel>Status</InputLabel>
-                    <Select
-                        value={state.value}
-                        onChange={state.handleChange}
-                    >
-                    <MenuItem value={0}>Todo</MenuItem>
-                    <MenuItem value={1}>In Progress</MenuItem>
-                    <MenuItem value={2}>Done</MenuItem>
-                    </Select>
-                </FormControl>
-                <FormControl>
-                    <InputLabel>Label</InputLabel>
-                    <Select
-                        value={label.value}
-                        onChange={label.handleChange}
-                    >
-                    <MenuItem value={'none'}>None</MenuItem>
-                    <MenuItem value={'learn'}>Learn</MenuItem>
-                    <MenuItem value={'exercise'}>Exercise</MenuItem>
-                    </Select>
-                </FormControl>
-                <Typography variant="body1" component="p">
-                    {
-                        suggestion === 'RUN' ?
-                            'Suggestion: Exercise' :
-                        suggestion === 'LEARN' ?
-                            'Suggestion: Learn' :
-                            'Suggestion: None'
-                    }
-                </Typography>
             </DialogContent>
             <DialogActions>
                 <Button onClick={close} color="primary">
@@ -146,3 +125,21 @@ export default function TaskCreateDialog({ isOpen, close }) {
         </Dialog>
     );
 }
+
+const useStyles = makeStyles({
+    container: {
+        width: "32em",
+    },
+    field: {
+        marginBottom: "1.2em",
+    },
+    select: {
+        width: "16em",
+    },
+    suggestion: {
+        marginTop: "0.8em",
+        marginBottom: "1.2em",
+        fontSize: "0.8em",
+        color: "#5d5d5d",
+    }
+});
